@@ -12,7 +12,7 @@ RUN wget https://github.com/busyloop/envcat/releases/download/v1.1.0/envcat-1.1.
 
 # adds a user without a specific UID
 RUN adduser --system --no-create-home nonroot
-RUN chown -R nonroot:nonroot /app
+RUN chown -R nonroot /app
 USER nonroot
 
 COPY requirements.txt /app/requirements.txt
