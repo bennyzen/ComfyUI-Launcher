@@ -1,6 +1,9 @@
-FROM python:3.10-slim
+FROM python:bookworm
 
 WORKDIR /app
+
+# adds a user without a specific UID
+RUN adduser --system --no-create-home nonroot
 
 RUN apt-get update && apt-get install -y nginx nodejs npm gcc g++ make wget && \
     rm -rf /var/lib/apt/lists/*
@@ -22,5 +25,8 @@ COPY server /app/server
 COPY nginx.conf /etc/nginx/nginx.conf.template
 
 WORKDIR /app/server
+
+# switch to that nonroot user
+USER nonroot
 
 CMD ["./entrypoint.sh"] 
