@@ -2,9 +2,6 @@ FROM python:bookworm
 
 WORKDIR /app
 
-# adds a user without a specific UID
-RUN adduser --system --no-create-home nonroot
-
 RUN apt-get update && apt-get install -y nginx nodejs npm gcc g++ make wget && \
     rm -rf /var/lib/apt/lists/*
 
@@ -12,6 +9,11 @@ RUN wget https://github.com/busyloop/envcat/releases/download/v1.1.0/envcat-1.1.
     && chmod +x envcat-1.1.0.linux-x86_64 \
     && mv envcat-1.1.0.linux-x86_64 /usr/bin/envcat \
     && ln -sf /usr/bin/envcat /usr/bin/envtpl
+
+# adds a user without a specific UID
+RUN adduser --system --no-create-home nonroot
+RUN chown -R nonroot:nonroot /app
+USER nonroot
 
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
@@ -25,8 +27,5 @@ COPY server /app/server
 COPY nginx.conf /etc/nginx/nginx.conf.template
 
 WORKDIR /app/server
-
-# switch to that nonroot user
-USER nonroot
 
 CMD ["./entrypoint.sh"] 
