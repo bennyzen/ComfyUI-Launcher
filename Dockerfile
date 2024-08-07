@@ -14,6 +14,8 @@ RUN wget https://github.com/busyloop/envcat/releases/download/v1.1.0/envcat-1.1.
 RUN adduser --system --no-create-home nonroot
 RUN chown -R nonroot /app
 USER nonroot
+RUN python3 -m venv venv
+RUN . venv/bin/activate
 
 COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
